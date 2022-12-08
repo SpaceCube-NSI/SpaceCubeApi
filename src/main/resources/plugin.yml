@@ -1,0 +1,6 @@
+name: SpaceCubeApi
+version: '${version}'
+main: fr.Mathis_Bruel.spacecube.spacecubeapi.Main
+authors: [ Mathis_Bruel ]
+description: Api for manage the players of SpaceCube
+website: https://www.spacecube.games

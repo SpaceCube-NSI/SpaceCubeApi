@@ -1,0 +1,59 @@
+package fr.Mathis_Bruel.spacecube.spacecubeapi;
+
+import fr.Mathis_Bruel.spacecube.spacecubeapi.DataBase.Connection;
+import fr.Mathis_Bruel.spacecube.spacecubeapi.DataBase.DbManageur;
+import org.bukkit.Bukkit;
+import org.bukkit.plugin.java.JavaPlugin;
+
+public final class Main extends JavaPlugin {
+    private static DbManageur dbmanageur;
+    public fr.Mathis_Bruel.spacecube.spacecubeapi.DataBase.DbCredentials DbCredentials;
+    public Connection connection;
+    private static Main instance;
+
+    @Override
+    public void onEnable() {
+        instance = this;
+        dbmanageur = new DbManageur();
+        Bukkit.getServer().getConsoleSender().sendMessage("§4---------------------------------------------------");
+        Bukkit.getServer().getConsoleSender().sendMessage("\n§2   _____                                  _____           _                                 _ \n" +
+                "§2  / ____|                                / ____|         | |                /\\             (_)\n" +
+                "§2 | (___    _ __     __ _    ___    ___  | |       _   _  | |__     ___     /  \\     _ __    _ \n" +
+                "§2  \\___ \\  | '_ \\   / _` |  / __|  / _ \\ | |      | | | | | '_ \\   / _ \\   / /\\ \\   | '_ \\  | |\n" +
+                "§2  ____) | | |_) | | (_| | | (__  |  __/ | |____  | |_| | | |_) | |  __/  / ____ \\  | |_) | | |\n" +
+                "§2 |_____/  | .__/   \\__,_|  \\___|  \\___|  \\_____|  \\__,_| |_.__/   \\___| /_/    \\_\\ | .__/  |_|\n" +
+                "§2          | |                                                                      | |        \n" +
+                "§2          |_|                                                                      |_|        ");
+        Bukkit.getServer().getConsoleSender().sendMessage("§4---------------------------------------------------");
+        Bukkit.getServer().getConsoleSender().sendMessage("§7-         L'API viens de ce §2start§7 !               §7-");
+        Bukkit.getServer().getConsoleSender().sendMessage("§7-         Developpeur: §2Mathis_Bruel               §7-");
+        Bukkit.getServer().getConsoleSender().sendMessage("§7-         Pour: §2SpaceCube                         §7-");
+        Bukkit.getServer().getConsoleSender().sendMessage("§4---------------------------------------------------");
+
+        // Plugin startup logic
+
+    }
+
+    @Override
+    public void onDisable() {
+        // Plugin shutdown logic
+        Bukkit.getServer().getConsoleSender().sendMessage("§4---------------------------------------------------");
+        Bukkit.getServer().getConsoleSender().sendMessage("\n§4   _____                                  _____           _                                 _ \n" +
+                "§4  / ____|                                / ____|         | |                /\\             (_)\n" +
+                "§4 | (___    _ __     __ _    ___    ___  | |       _   _  | |__     ___     /  \\     _ __    _ \n" +
+                "§4  \\___ \\  | '_ \\   / _` |  / __|  / _ \\ | |      | | | | | '_ \\   / _ \\   / /\\ \\   | '_ \\  | |\n" +
+                "§4  ____) | | |_) | | (_| | | (__  |  __/ | |____  | |_| | | |_) | |  __/  / ____ \\  | |_) | | |\n" +
+                "§4 |_____/  | .__/   \\__,_|  \\___|  \\___|  \\_____|  \\__,_| |_.__/   \\___| /_/    \\_\\ | .__/  |_|\n" +
+                "§4          | |                                                                      | |        \n" +
+                "§4          |_|                                                                      |_|        ");
+        Bukkit.getServer().getConsoleSender().sendMessage("§4---------------------------------------------------");
+        Bukkit.getServer().getConsoleSender().sendMessage("§7-         L'Api viens de ce §4stop§7 !                §7-");
+        Bukkit.getServer().getConsoleSender().sendMessage("§7-         Developpeur: §2Mathis_Bruel               §7-");
+        Bukkit.getServer().getConsoleSender().sendMessage("§7-         Pour: §2SpaceCube                         §7-");
+        Bukkit.getServer().getConsoleSender().sendMessage("§4---------------------------------------------------");
+    }
+
+    public static Main getApi() {
+        return instance;
+    }
+}
