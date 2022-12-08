@@ -30,7 +30,7 @@ public final class Main extends JavaPlugin {
         Bukkit.getServer().getConsoleSender().sendMessage("§7-         Pour: §2SpaceCube                         §7-");
         Bukkit.getServer().getConsoleSender().sendMessage("§4---------------------------------------------------");
 
-        // Plugin startup logic
+        getCommand("test").setExecutor(new TestCommand());
 
     }
 
@@ -55,5 +55,8 @@ public final class Main extends JavaPlugin {
 
     public static Main getApi() {
         return instance;
+    }
+    public static DbManageur getDbManageur() {
+        return dbmanageur;
     }
 }

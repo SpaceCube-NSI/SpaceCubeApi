@@ -4,3 +4,7 @@ main: fr.Mathis_Bruel.spacecube.spacecubeapi.Main
 authors: [ Mathis_Bruel ]
 description: Api for manage the players of SpaceCube
 website: https://www.spacecube.games
+commands:
+  test:
+    description: Test command
+    usage: /test
