@@ -35,6 +35,8 @@ public final class Main extends JavaPlugin {
         Bukkit.getServer().getConsoleSender().sendMessage("§4---------------------------------------------------");
 
         getCommand("test").setExecutor(new TestCommand());
+        Ranks.init();
+        System.out.println(ranks);
 
     }
 

@@ -90,9 +90,9 @@ public class Ranks {
     }
 
     /**
-     * This function sets the name of the object to the value of the parameter.
+     * Returns true if this is a default method.
      *
-     * @param name The name of the parameter.
+     * @return The value of the isDefault variable.
      */
     public boolean isDefault() {
         return isDefault;
@@ -184,7 +184,7 @@ public class Ranks {
             final ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
                 System.out.println("Rank already exist");
-                return this.getRank(name);
+                return this;
             } else {
                 System.out.println("Rank doesn't exist");
                 // Player doesn't exist
@@ -199,6 +199,8 @@ public class Ranks {
 
                 preparedStatement2.executeUpdate();
                 preparedStatement2.close();
+
+                Main.getApi().ranks.put(this.name, this);
             }
             resultSet.close();
             connection.close();
@@ -252,6 +254,7 @@ public class Ranks {
 
                 preparedStatement2.executeUpdate();
                 preparedStatement2.close();
+                Main.getApi().ranks.put(this.name, this);
             }
             resultSet.close();
             connection.close();
@@ -268,31 +271,41 @@ public class Ranks {
         this.isDefault = isDefault;
     }
 
+    public static Ranks getRank(String name){
+        Ranks rank = Main.getApi().ranks.get(name);
+        if(rank != null){
+            return rank;
+        }else{
+            return null;
+        }
+    }
+
+
+
+
+
+
     /**
-     * It gets the rank from the database and returns it
-     *
-     * @param name The name of the rank
-     * @return The rank object
+     * It gets all the ranks from the database and puts them in a map in the Main class
      */
-    public Ranks getRank(String name){
+    public static final void init() {
+        // create all ranks and put in map in Main
         final Connection connection2 = Main.getDbManageur().getConnection();
         try {
             final java.sql.Connection connection = connection2.getConnection();
-            String query = "SELECT Name, Permissions, Prefix, Suffix, ColorChat, ColorName, `Default` FROM Ranks WHERE Name=?";
+            String query = "SELECT Name, Permissions, Prefix, Suffix, ColorChat, ColorName, `Default` FROM Ranks";
             PreparedStatement preparedStatement = connection.prepareStatement(query);
-            preparedStatement.setString(1, name);
             final ResultSet resultSet = preparedStatement.executeQuery();
-            if (resultSet.next()) {
-                this.name = resultSet.getString("Name");
-                this.prefix = resultSet.getString("Prefix");
-                this.suffix = resultSet.getString("Suffix");
-                this.permissions = resultSet.getString("Permissions");
-                this.colorName = resultSet.getString("ColorName");
-                this.colorChat = resultSet.getString("ColorChat");
-                this.isDefault = resultSet.getBoolean("Default");
-            } else {
-                System.out.println("Rank doesn't exist");
-                return null;
+            while (resultSet.next()) {
+                String name = resultSet.getString("Name");
+                String prefix = resultSet.getString("Prefix");
+                String suffix = resultSet.getString("Suffix");
+                String permissions = resultSet.getString("Permissions");
+                String colorName = resultSet.getString("ColorName");
+                String colorChat = resultSet.getString("ColorChat");
+                boolean isDefault = resultSet.getBoolean("Default");
+                Ranks rank = new Ranks().createRank(name, prefix, suffix, permissions, colorName, colorChat, isDefault);
+                Main.getApi().ranks.put(name, rank);
             }
             resultSet.close();
             connection.close();
@@ -300,7 +313,6 @@ public class Ranks {
         } catch (SQLException e) {
             System.out.println(e);
         }
-        return this;
     }
 
 }
