@@ -2,14 +2,18 @@ package fr.Mathis_Bruel.spacecube.spacecubeapi;
 
 import fr.Mathis_Bruel.spacecube.spacecubeapi.DataBase.Connection;
 import fr.Mathis_Bruel.spacecube.spacecubeapi.DataBase.DbManageur;
+import fr.Mathis_Bruel.spacecube.spacecubeapi.api.Ranks.Ranks;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.util.HashMap;
 
 public final class Main extends JavaPlugin {
     private static DbManageur dbmanageur;
     public fr.Mathis_Bruel.spacecube.spacecubeapi.DataBase.DbCredentials DbCredentials;
     public Connection connection;
     private static Main instance;
+    public HashMap<String, Ranks> ranks = new HashMap<>();
 
     @Override
     public void onEnable() {
