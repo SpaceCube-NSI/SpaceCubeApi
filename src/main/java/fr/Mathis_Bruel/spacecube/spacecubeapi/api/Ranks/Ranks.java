@@ -280,6 +280,16 @@ public class Ranks {
         }
     }
 
+    public static Ranks getDefaultRank(){
+        for(Ranks rank : Main.getApi().ranks.values()){
+            System.out.println(rank.isDefault());
+            if(rank.isDefault() == true){
+                return rank;
+            }
+        }
+        return null;
+    }
+
 
 
 
@@ -304,7 +314,17 @@ public class Ranks {
                 String colorName = resultSet.getString("ColorName");
                 String colorChat = resultSet.getString("ColorChat");
                 boolean isDefault = resultSet.getBoolean("Default");
-                Ranks rank = new Ranks().createRank(name, prefix, suffix, permissions, colorName, colorChat, isDefault);
+                System.out.println(isDefault);
+                Ranks rank = new Ranks();
+                rank.setName(name);
+                rank.setPrefix(prefix);
+                rank.setSuffix(suffix);
+                rank.setPermission(permissions);
+                rank.setColorName(colorName);
+                rank.setColorChat(colorChat);
+                rank.setDefault(isDefault);
+
+                System.out.println(name);
                 Main.getApi().ranks.put(name, rank);
             }
             resultSet.close();

@@ -2,6 +2,8 @@ package fr.Mathis_Bruel.spacecube.spacecubeapi.api.players;
 
 import fr.Mathis_Bruel.spacecube.spacecubeapi.DataBase.Connection;
 import fr.Mathis_Bruel.spacecube.spacecubeapi.Main;
+import fr.Mathis_Bruel.spacecube.spacecubeapi.api.Ranks.Ranks;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.sql.PreparedStatement;
@@ -15,9 +17,9 @@ import java.util.UUID;
 public class SpaceCubePlayer {
 
     private UUID uuid;
-    private Rank rank;
+    private Ranks rank;
     private Money money;
-    private Permissions permissions;
+    private String permissions;
 
     public SpaceCubePlayer() {
         this.uuid = uuid;
@@ -39,7 +41,7 @@ public class SpaceCubePlayer {
      *
      * @return The rank of the card.
      */
-    public Rank getRank() {
+    public Ranks getRank() {
         return rank;
     }
 
@@ -57,7 +59,7 @@ public class SpaceCubePlayer {
      *
      * @return The permissions object.
      */
-    public Permissions getPermissions() {
+    public String getPermissions() {
         return permissions;
     }
 
@@ -68,7 +70,7 @@ public class SpaceCubePlayer {
      *
      * @param rank The rank of the card.
      */
-    public void setRank(Rank rank) {
+    public void setRank(Ranks rank) {
         this.rank = rank;
     }
 
@@ -86,7 +88,7 @@ public class SpaceCubePlayer {
      *
      * @param permissions The permissions to be set for the user.
      */
-    public void setPermissions(Permissions permissions) {
+    public void setPermissions(String permissions) {
         /**
          * It creates a player in the database if it doesn't exist
          *
@@ -104,7 +106,8 @@ public class SpaceCubePlayer {
      * @param player The player to create
      * @return The player's information.
      */
-    public SpaceCubePlayer createPlayer(Player player) {
+    private SpaceCubePlayer register(Player player) {
+        this.rank = Ranks.getDefaultRank();
         final Connection connection2 = Main.getDbManageur().getConnection();
         try {
             final java.sql.Connection connection = connection2.getConnection();
@@ -113,13 +116,13 @@ public class SpaceCubePlayer {
             preparedStatement.setString(1, player.getUniqueId().toString());
             final ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
-                // Player already exist
+                this.rank = Ranks.getRank(resultSet.getString("Rank"));
             } else {
                 // Player doesn't exist
                 PreparedStatement preparedStatement2 = connection.prepareStatement("INSERT INTO `Players`(`UUID`, `Money`, `Rank`, `Permissions`) VALUES (?,?,?,?)");
                 preparedStatement2.setString(1, player.getUniqueId().toString());
                 preparedStatement2.setInt(2, 0);
-                preparedStatement2.setString(3, "Membre");
+                preparedStatement2.setString(3, Ranks.getDefaultRank().getName());
                 preparedStatement2.setString(4, "");
                 preparedStatement2.executeUpdate();
                 preparedStatement2.close();
@@ -132,31 +135,110 @@ public class SpaceCubePlayer {
             return null;
         }
         this.uuid = player.getUniqueId();
-        this.rank = null;
         this.money = null;
         this.permissions = null;
+        Main.getApi().scp.put(player.getUniqueId(), this);
         return this;
     }
 
-    // update this player in db
-/*
-    public void updatePlayer() {
+    /**
+     * It updates the player's data in the database
+     *
+     * @return A boolean
+     */
+    public boolean updatePlayer() {
         final Connection connection2 = Main.getDbManageur().getConnection();
         try {
             final java.sql.Connection connection = connection2.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement("UPDATE `Players` SET `Money`=?,`Rank`=?,`Permissions`=? WHERE UUID=?");
-            preparedStatement.setInt(1, this.getMoney());
-            preparedStatement.setString(2, this.rank.getRank());
-            preparedStatement.setString(3, this.permissions.getPermissions());
-            preparedStatement.setString(4, this.name);
+            preparedStatement.setInt(1, 0);
+            preparedStatement.setString(2, this.getRank().getName());
+            preparedStatement.setString(3, "");
+            preparedStatement.setString(4, this.getUuid().toString());
             preparedStatement.executeUpdate();
             preparedStatement.close();
             connection.close();
+            return true;
+        } catch (SQLException e) {
+            System.out.println(e);
+            return false;
+        }
+    }
+
+    // isRegistered
+
+    /**
+     * It checks if the player is registered in the database
+     *
+     * @param SpaceCubePlayer The player to check
+     * @return A boolean
+     */
+    public boolean isRegistered(SpaceCubePlayer SpaceCubePlayer) {
+        final Connection connection2 = Main.getDbManageur().getConnection();
+        try {
+            final java.sql.Connection connection = connection2.getConnection();
+            String query = "SELECT UUID FROM Players WHERE UUID=?";
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setString(1, SpaceCubePlayer.getUuid().toString());
+            final ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+            return false;
+        }
+    }
+
+
+
+
+
+
+
+
+    /**
+     * It gets all the players from the database and puts them in a map
+     */
+    public static final void init(){
+        // create all scp and put in map in Main
+        final Connection connection2 = Main.getDbManageur().getConnection();
+        try {
+            final java.sql.Connection connection = connection2.getConnection();
+            String query = "SELECT UUID, Money, Rank, Permissions FROM Players";
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            final ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                SpaceCubePlayer scp = new SpaceCubePlayer().register(Bukkit.getOfflinePlayer(UUID.fromString(resultSet.getString("UUID"))).getPlayer());
+
+            }
+            resultSet.close();
+            connection.close();
+            preparedStatement.close();
         } catch (SQLException e) {
             System.out.println(e);
         }
+
+
     }
-*/
+
+
+    /**
+     * It gets the player from the map
+     *
+     * @param player The player to get
+     * @return The player's information.
+     */
+    public static SpaceCubePlayer getSCP(Player player) {
+        SpaceCubePlayer scp = Main.getApi().scp.get(player.getUniqueId());
+        if (scp == null) {
+            scp = new SpaceCubePlayer().register(player);
+        }
+        return scp;
+    }
+
 
 
 }
