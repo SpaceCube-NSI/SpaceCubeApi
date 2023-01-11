@@ -18,7 +18,7 @@ public class SpaceCubePlayer {
 
     private UUID uuid;
     private Ranks rank;
-    private Money money;
+    private float money;
     private String permissions;
 
     public SpaceCubePlayer() {
@@ -50,7 +50,7 @@ public class SpaceCubePlayer {
      *
      * @return The money object.
      */
-    public Money getMoney() {
+    public float getMoney() {
         return money;
     }
 
@@ -79,7 +79,7 @@ public class SpaceCubePlayer {
      *
      * @param money The amount of money to be added to the player's balance.
      */
-    public void setMoney(Money money) {
+    public void setMoney(float money) {
         this.money = money;
     }
 
@@ -135,7 +135,7 @@ public class SpaceCubePlayer {
             return null;
         }
         this.uuid = player.getUniqueId();
-        this.money = null;
+        this.money = 0;
         this.permissions = null;
         Main.getApi().scp.put(player.getUniqueId(), this);
         return this;
@@ -191,13 +191,6 @@ public class SpaceCubePlayer {
             return false;
         }
     }
-
-
-
-
-
-
-
 
     /**
      * It gets all the players from the database and puts them in a map

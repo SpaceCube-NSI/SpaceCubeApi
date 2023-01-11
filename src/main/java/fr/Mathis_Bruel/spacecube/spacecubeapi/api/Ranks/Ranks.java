@@ -10,6 +10,8 @@ import fr.Mathis_Bruel.spacecube.spacecubeapi.api.players.Rank;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * It's a class that represents a rank
@@ -20,12 +22,47 @@ public class Ranks {
     private String name;
     private String prefix;
     private String suffix;
-    private String permissions;
+    private ArrayList<String> permissions;
     private String colorName;
     private String colorChat;
     private boolean isDefault;
 
     public Ranks() {
+    }
+    public Ranks(String name) {
+        this.name = name;
+    }
+    public Ranks(String name, String prefix){
+        this.name = name;
+        this.prefix = prefix;
+    }
+    public Ranks(String name, String prefix, String suffix){
+        this.name = name;
+        this.prefix = prefix;
+        this.suffix = suffix;
+    }
+    public Ranks(String name, String prefix, String suffix, ArrayList permissions){
+        this.name = name;
+        this.prefix = prefix;
+        this.suffix = suffix;
+        this.permissions = permissions;
+    }
+    public Ranks(String name, String prefix, String suffix, ArrayList permissions, String colorName){
+        this.name = name;
+        this.prefix = prefix;
+        this.suffix = suffix;
+        this.permissions = permissions;
+        this.colorName = colorName;
+    }
+    public Ranks(String name, String prefix, String suffix, ArrayList permissions, String colorName, String colorChat){
+        this.name = name;
+        this.prefix = prefix;
+        this.suffix = suffix;
+        this.permissions = permissions;
+        this.colorName = colorName;
+        this.colorChat = colorChat;
+    }
+    public Ranks(String name, String prefix, String suffix, ArrayList permissions, String colorName, String colorChat, boolean isDefault){
         this.name = name;
         this.prefix = prefix;
         this.suffix = suffix;
@@ -34,6 +71,8 @@ public class Ranks {
         this.colorChat = colorChat;
         this.isDefault = isDefault;
     }
+
+
 
     /**
      * This function returns the name of the person.
@@ -67,7 +106,7 @@ public class Ranks {
      *
      * @return The permissions of the user.
      */
-    public String getPermissions() {
+    public ArrayList<String> getPermissions() {
         return permissions;
     }
 
@@ -130,7 +169,7 @@ public class Ranks {
      *
      * @param permissions The permissions that the user has.
      */
-    public void setPermission(String permissions) {
+    public void setPermission(ArrayList<String> permissions) {
         this.permissions = permissions;
     }
 
@@ -163,6 +202,67 @@ public class Ranks {
 
 
     /**
+     * This function adds a permission to the permissions list.
+     *
+     * @param permission The permission to add to the list of permissions.
+     */
+    public void addPermission(String permission){
+        permissions.add(permission);
+    }
+    /**
+     * It removes a permission from the permissions list
+     *
+     * @param permission The permission to remove.
+     */
+    public void removePermission(String permission){
+        permissions.remove(permission);
+    }
+    /**
+     * This function takes an ArrayList of Strings as a parameter and adds all of the Strings in the ArrayList to the
+     * permissions ArrayList
+     *
+     * @param permissions The permissions you want to request.
+     */
+    public void addPermissions(ArrayList<String> permissions){
+        this.permissions.addAll(permissions);
+    }
+    /**
+     * It removes all the permissions from the permissions arraylist.
+     *
+     * @param permissions The permissions you want to add to the user.
+     */
+    public void removePermissions(ArrayList<String> permissions){
+        this.permissions.removeAll(permissions);
+    }
+    /**
+     * This function adds the given permissions to the permissions list.
+     *
+     * @param permissions The permissions that the user has.
+     */
+    public void addPermissions(String[] permissions){
+        this.permissions.addAll(Arrays.asList(permissions));
+    }
+    /**
+     * Remove all the permissions in the array from the permissions list.
+     *
+     * @param permissions The permissions you want to add to the role.
+     */
+    public void removePermissions(String[] permissions){
+        this.permissions.removeAll(Arrays.asList(permissions));
+    }
+    /**
+     * Returns true if the permissions list contains the given permission.
+     *
+     * @param permission The permission to check for.
+     * @return A boolean value.
+     */
+    public boolean hasPermission(String permission){
+        return permissions.contains(permission);
+    }
+
+
+
+    /**
      * It creates a rank in the database
      *
      * @param name The name of the rank
@@ -174,7 +274,7 @@ public class Ranks {
      * @param isDefault If the rank is the default rank.
      * @return The rank that was created.
      */
-    public Ranks createRank(String name, String prefix, String suffix, String permissions, String colorName, String colorChat, boolean isDefault) {
+    public Ranks createRank(String name, String prefix, String suffix, ArrayList<String> permissions, String colorName, String colorChat, boolean isDefault) {
         final Connection connection2 = Main.getDbManageur().getConnection();
         try {
             final java.sql.Connection connection = connection2.getConnection();
@@ -192,7 +292,7 @@ public class Ranks {
                 preparedStatement2.setString(1, name);
                 preparedStatement2.setString(2, prefix);
                 preparedStatement2.setString(3, suffix);
-                preparedStatement2.setString(4, permissions);
+                preparedStatement2.setString(4, String.join(",", permissions));
                 preparedStatement2.setString(5, colorName);
                 preparedStatement2.setString(6, colorChat);
                 preparedStatement2.setBoolean(7, isDefault);
@@ -235,7 +335,7 @@ public class Ranks {
                 PreparedStatement preparedStatement2 = connection.prepareStatement("UPDATE `Ranks` SET `Prefix`=?,`Suffix`=?,`Permissions`=?,`ColorName`=?,`ColorChat`=?,`Default`=? WHERE Name=?");
                 preparedStatement2.setString(1, this.prefix);
                 preparedStatement2.setString(2, this.suffix);
-                preparedStatement2.setString(3, this.permissions);
+                preparedStatement2.setString(3, String.join(",", this.permissions));
                 preparedStatement2.setString(4, this.colorName);
                 preparedStatement2.setString(5, this.colorChat);
                 preparedStatement2.setBoolean(6, this.isDefault);
@@ -247,7 +347,7 @@ public class Ranks {
                 preparedStatement2.setString(1, this.name);
                 preparedStatement2.setString(2, this.prefix);
                 preparedStatement2.setString(3, this.suffix);
-                preparedStatement2.setString(4, this.permissions);
+                preparedStatement2.setString(4, String.join(",", this.permissions));
                 preparedStatement2.setString(5, this.colorName);
                 preparedStatement2.setString(6, this.colorChat);
                 preparedStatement2.setBoolean(7, this.isDefault);
@@ -310,7 +410,7 @@ public class Ranks {
                 String name = resultSet.getString("Name");
                 String prefix = resultSet.getString("Prefix");
                 String suffix = resultSet.getString("Suffix");
-                String permissions = resultSet.getString("Permissions");
+                ArrayList<String> permissions = (ArrayList<String>) Arrays.asList(resultSet.getString("Permissions").split(","));
                 String colorName = resultSet.getString("ColorName");
                 String colorChat = resultSet.getString("ColorChat");
                 boolean isDefault = resultSet.getBoolean("Default");
@@ -334,6 +434,9 @@ public class Ranks {
             System.out.println(e);
         }
     }
+
+
+
 
 }
 
