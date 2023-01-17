@@ -382,7 +382,6 @@ public class Ranks {
 
     public static Ranks getDefaultRank(){
         for(Ranks rank : Main.getApi().ranks.values()){
-            System.out.println(rank.isDefault());
             if(rank.isDefault() == true){
                 return rank;
             }
@@ -434,10 +433,6 @@ public class Ranks {
             System.out.println(e);
         }
     }
-
-
-
-
 }
 
 
