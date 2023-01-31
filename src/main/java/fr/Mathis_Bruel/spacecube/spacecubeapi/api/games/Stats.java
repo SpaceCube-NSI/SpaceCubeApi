@@ -275,7 +275,7 @@ public class Stats {
         this.ratioWinsLoses = (float) this.wins / (float) this.loses;
     }
 
-    public void updateRatio() {
+    public void updateRatios() {
         this.ratioKillsDeath = (float) this.kills / (float) this.death;
         this.ratioWinsLoses = (float) this.wins / (float) this.loses;
     }
