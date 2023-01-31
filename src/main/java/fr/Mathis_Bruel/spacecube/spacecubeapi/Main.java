@@ -2,8 +2,6 @@ package fr.Mathis_Bruel.spacecube.spacecubeapi;
 
 import fr.Mathis_Bruel.spacecube.spacecubeapi.DataBase.Connection;
 import fr.Mathis_Bruel.spacecube.spacecubeapi.DataBase.DbManageur;
-import fr.Mathis_Bruel.spacecube.spacecubeapi.api.Ranks.Ranks;
-import fr.Mathis_Bruel.spacecube.spacecubeapi.api.players.SpaceCubePlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -15,8 +13,6 @@ public final class Main extends JavaPlugin {
     public fr.Mathis_Bruel.spacecube.spacecubeapi.DataBase.DbCredentials DbCredentials;
     public Connection connection;
     private static Main instance;
-    public HashMap<String, Ranks> ranks = new HashMap<>();
-    public HashMap<UUID, SpaceCubePlayer> scp = new HashMap<>();
 
     @Override
     public void onEnable() {
@@ -38,8 +34,6 @@ public final class Main extends JavaPlugin {
         Bukkit.getServer().getConsoleSender().sendMessage("§4---------------------------------------------------");
 
         getCommand("test").setExecutor(new TestCommand());
-        Ranks.init();
-        SpaceCubePlayer.init();
 
     }
 
