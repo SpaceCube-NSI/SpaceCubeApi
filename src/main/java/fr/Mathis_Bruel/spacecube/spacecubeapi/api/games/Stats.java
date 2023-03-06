@@ -310,7 +310,7 @@ public class Stats {
                 preparedStatement2.setInt(2, this.death);
                 preparedStatement2.setInt(3, this.wins);
                 preparedStatement2.setInt(4, this.loses);
-                preparedStatement2.setString(5, this.divers.toString());
+                preparedStatement2.setString(5, JSON.build(this.divers));
                 preparedStatement2.setString(7, this.uuid.toString());
                 preparedStatement2.setInt(6, this.games);
                 preparedStatement2.executeUpdate();
@@ -323,7 +323,7 @@ public class Stats {
                 preparedStatement2.setInt(3, this.death);
                 preparedStatement2.setInt(4, this.wins);
                 preparedStatement2.setInt(5, this.loses);
-                preparedStatement2.setString(6, this.divers.toString());
+                preparedStatement2.setString(6, JSON.build(this.divers));
                 preparedStatement2.setInt(7, this.games);
                 preparedStatement2.executeUpdate();
             }
